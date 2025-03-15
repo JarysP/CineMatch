@@ -1,0 +1,87 @@
+// Prueba No. 01 : Programación Orientada a Objetos (OOP)
+class Program
+{
+    static void Main()
+    {
+        var cuenta1 = new CuentaBancaria("Juan", 1000);
+        var cuenta2 = new CuentaBancaria("María", 700);
+
+        cuenta1.MostrarSaldo();
+        cuenta2.MostrarSaldo();
+        Console.WriteLine();
+
+        Console.WriteLine("Se realizo una transferencia de $300 a Maria:");
+        cuenta1.Transferir(300, cuenta2);
+        
+        cuenta1.MostrarSaldo();
+        cuenta2.MostrarSaldo();
+        Console.WriteLine();
+
+        Console.WriteLine("Maria hizo un retiro de $150:");
+        cuenta2.Retirar(150);
+
+        cuenta2.MostrarSaldo();
+    }
+
+    class CuentaBancaria
+    {
+        private string titular;
+        private decimal saldo;
+
+        public CuentaBancaria(string titular, decimal saldoInicial)
+        {
+            try
+            {
+                this.titular = titular;
+                this.saldo = saldoInicial >= 0 ? saldoInicial : throw new ArgumentException("El saldo inicial debe ser positivo.");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public void Depositar(decimal monto)
+        {
+            try
+            {
+                this.saldo = monto > 0 ? saldo += monto : throw new ArgumentException("El monto a depositar debe ser positivo.");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }    
+
+        public void Retirar(decimal monto)
+        {
+            if (monto > 0 && monto <= saldo)
+            {
+                saldo -= monto;
+            }
+            else
+            {
+                Console.WriteLine("Fondos insuficientes o monto inválido.");
+            }
+        }
+
+        public void MostrarSaldo()
+        {
+            Console.WriteLine($"Saldo de {titular}: {saldo}");
+        }
+
+        public void Transferir(decimal monto, CuentaBancaria cuentaDestino)
+        {
+            if (monto > 0 && monto <= saldo)
+            {
+                saldo -= monto;
+                cuentaDestino.Depositar(monto);
+            }
+            else
+            {
+                Console.WriteLine("Transferencia fallida: fondos insuficientes o monto inválido.");
+            }
+        }
+    }
+}
+
